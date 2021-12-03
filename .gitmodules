@@ -1,0 +1,3 @@
+[submodule "vim/pack/start/dispatch"]
+	path = vim/pack/start/dispatch
+	url = git@github.com:SsnL/dataset-distillation.git
