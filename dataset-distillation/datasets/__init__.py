@@ -8,6 +8,9 @@ from torchvision import datasets, transforms
 from . import caltech_ucsd_birds
 from . import pascal_voc
 from .usps import USPS
+from . import fashion
+import warnings
+warnings.filterwarnings("ignore")
 
 default_dataset_roots = dict(
     MNIST='./data/mnist',
@@ -17,7 +20,7 @@ default_dataset_roots = dict(
     Cifar10='./data/cifar10',
     CUB200='./data/birds',
     PASCAL_VOC='./data/pascal_voc',
-    FASHION='./data/fashion',
+    FASHION1000='./data/fashion',
 )
 
 
@@ -31,7 +34,7 @@ dataset_normalization = dict(
     CUB200=((0.47850531339645386, 0.4992702007293701, 0.4022205173969269),
             (0.23210887610912323, 0.2277066558599472, 0.26652416586875916)),
     PASCAL_VOC=((0.485, 0.456, 0.406), (0.229, 0.224, 0.225)),
-    FASHION=((0.1307,), (0.3081,)),
+    FASHION1000=((0.1307,), (0.3081,)),
 )
 
 
@@ -44,7 +47,7 @@ dataset_labels = dict(
              'deer', 'dog', 'monkey', 'horse', 'ship', 'truck'),
     CUB200=caltech_ucsd_birds.class_labels,
     PASCAL_VOC=pascal_voc.object_categories,
-    FASHION=list(range(10)),
+    FASHION1000=list(range(10)),
 )
 
 # (nc, real_size, num_classes)
@@ -58,7 +61,7 @@ dataset_stats = dict(
     Cifar10=DatasetStats(3, 32, 10),
     CUB200=DatasetStats(3, 224, 200),
     PASCAL_VOC=DatasetStats(3, 224, 20),
-    FASHION=DatasetStats(1, 28, 10),
+    FASHION1000=DatasetStats(1, 28, 10),
 
 )
 
@@ -98,21 +101,23 @@ def get_dataset(state, phase):
             transforms.ToTensor(),
             transforms.Normalize(*normalization),
         ]
-        with suppress_stdout():
-            return datasets.MNIST(root, train=(phase == 'train'), download=True,
+        #with suppress_stdout():
+        #print("=========================", type(datasets.MNIST(root, train=(phase == 'train'), download=True,
+                                  #transform=transforms.Compose(transform_list))))
+        return datasets.MNIST(root, train=(phase == 'train'), download=True,
                                   transform=transforms.Compose(transform_list))
-    elif name == 'FASHION':
+    elif name == 'FASHION1000':
         if input_size != real_size:
             transform_list = [transforms.Resize([input_size, input_size], Image.BICUBIC)]
         else:
             transform_list = []
         transform_list += [
-            transforms.ToTensor(),
+            #transforms.ToTensor(),
             transforms.Normalize(*normalization),
         ]
-        with suppress_stdout():
-            return datasets.FashionMNIST(root, train=(phase == 'train'), download=True,
-                transform=transforms.Compose(transform_list))
+        #with suppress_stdout():
+            
+        return fashion.FASHION1000(root, train=(phase == 'train'), transform=transforms.Compose(transform_list))
     elif name == 'MNIST_RGB':
         transform_list = [transforms.Grayscale(3)]
         if input_size != real_size:

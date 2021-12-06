@@ -234,7 +234,7 @@ class BaseOptions(object):
         parser.add_argument('--checkpoint_interval', type=int, default=10, metavar='N',
                             help='checkpoint interval (epoch)')
         parser.add_argument('--dataset', type=str, default='MNIST',
-                            help='dataset: MNIST | Cifar10 | PASCAL_VOC | CUB200 | FASHION')
+                            help='dataset: MNIST | Cifar10 | PASCAL_VOC | CUB200 | FASHION1000')
         parser.add_argument('--source_dataset', type=str, default=None,
                             help='dataset: MNIST | Cifar10 | PASCAL_VOC | CUB200')
         parser.add_argument('--dataset_root', type=str, default=None,

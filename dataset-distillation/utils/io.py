@@ -57,10 +57,10 @@ def _vis_results_fn(np_steps, distilled_images_per_class_per_step, dataset_info,
                 plt_images.append(axis.imshow(img, interpolation='nearest', cmap=cmap))
             else:
                 plt_images[n].set_data(img)
-                if i == 29:
+                #if i == 29:
                     # save the image
-                    jobid = os.getenv('SLURM_ARRAY_TASK_ID')
-                    plt.imsave(jobid + '_' + str(i) + '_' + str(n) + '_' + '.png', img)
+                    #jobid = os.getenv('SLURM_ARRAY_TASK_ID')
+                    #plt.imsave(jobid + '_' + str(i) + '_' + str(n) + '_' + '.png', img)
             if first_run:
                 axis.axis('off')
                 if subtitle:
