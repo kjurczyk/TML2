@@ -19,59 +19,59 @@ import tensorflow as tf
 """
 Get all the files 
 """
+training_data_filename = 'first_1000_train' # change the filename
+
+dirPathDistilled = "../distilled_images/"
+dirPathAncestor = "../ancestor_images/"
 files = [
-      'train_labels_20k.gz', 'train_images_20k.gz',
-      'second_1000_train_labels.gz', 'second_1000_train_images.gz',
-      'third_1000_train_labels.gz', 'third_1000_train_images.gz',
+      training_data_filename + '_labels.gz', training_data_filename +'_images.gz',
+      'second_1000_attack_labels.gz', 'second_1000_attack_images.gz',
+      'third_1000_out_labels.gz', 'third_1000_out_images.gz',
+      'fourth_1000_val_labels.gz','fourth_1000_val_images.gz',
       'out_labels_20k.gz', 'out_images_20k.gz',
       't10k-labels-idx1-ubyte.gz', 't10k-images-idx3-ubyte.gz'
       ]
 
-with gzip.open(files[0], 'rb') as lbpath:
-    labels_from_first_100 = np.frombuffer(lbpath.read(), np.uint8)
-    print(labels_from_first_100.shape)
-    print(labels_from_first_100)
+with gzip.open(dirPathAncestor + files[0], 'rb') as lbpath:   # train
+    first_1000_train_labels = np.frombuffer(lbpath.read(), np.uint8)
+    #print(first_1000_train_labels.shape)
+    #print(first_1000_train_labels)
 
-with gzip.open(files[1], 'rb') as imgpath:
-    distilled_images_from_first_100 = np.frombuffer(
-    imgpath.read(), np.uint8).reshape(len(labels_from_first_100), 28, 28)
-    print(f"original distilled images type: {type(distilled_images_from_first_100)}")
-    # distilled_images_from_first_100 = np.array(tf.image.rgb_to_grayscale(distilled_images_from_first_100))
-    # print(f"type of distilled images: {type(distilled_images_from_first_100)}")
+with gzip.open(dirPathAncestor + files[1], 'rb') as imgpath:  # train
+    first_1000_train_images = np.frombuffer(
+    imgpath.read(), np.uint8).reshape(len(first_1000_train_labels), 28, 28)
     #print(first_1000_train_images.shape)
     #print(first_1000_train_images)
-    # img = Image.open("image_file_path") #for example image size : 28x28x3
-    # img1 = img.convert('L')  #convert a gray scale
     
-with gzip.open(files[2], 'rb') as lbpath:
+with gzip.open(dirPathAncestor + files[2], 'rb') as lbpath: # attack
     second_1000_train_labels = np.frombuffer(lbpath.read(), np.uint8)
 
-with gzip.open(files[3], 'rb') as imgpath:
+with gzip.open(dirPathAncestor + files[3], 'rb') as imgpath: # attack
     second_1000_train_images = np.frombuffer(
     imgpath.read(), np.uint8).reshape(len(second_1000_train_labels), 28, 28)
 
-with gzip.open(files[4], 'rb') as lbpath:
+with gzip.open(dirPathAncestor + files[4], 'rb') as lbpath: # out
     third_1000_train_labels = np.frombuffer(lbpath.read(), np.uint8)
 
-with gzip.open(files[5], 'rb') as imgpath:
+with gzip.open(dirPathAncestor + files[5], 'rb') as imgpath: # out
     third_1000_train_images = np.frombuffer(
     imgpath.read(), np.uint8).reshape(len(third_1000_train_labels), 28, 28)
     
-with gzip.open(files[6], 'rb') as lbpath:
+with gzip.open(dirPathAncestor + files[6], 'rb') as lbpath: # validation
     fourth_1000_train_labels = np.frombuffer(lbpath.read(), np.uint8)
 
-with gzip.open(files[7], 'rb') as imgpath:
+with gzip.open(dirPathAncestor + files[7], 'rb') as imgpath: # validation
     fourth_1000_train_images = np.frombuffer(
     imgpath.read(), np.uint8).reshape(len(fourth_1000_train_labels), 28, 28)
     
-with gzip.open(files[8], 'rb') as lbpath:
+with gzip.open(dirPathAncestor + files[10], 'rb') as lbpath: # test
     t10k_labels_idx1_ubyte = np.frombuffer(lbpath.read(), np.uint8, offset=8)
     #print(t10k_labels_idx1_ubyte.shape)
 
-with gzip.open(files[9], 'rb') as imgpath:
+with gzip.open(dirPathAncestor + files[11], 'rb') as imgpath: # test
     t10k_images_idx3_ubyte = np.frombuffer(
     imgpath.read(), np.uint8, offset=16).reshape(len(t10k_labels_idx1_ubyte), 28, 28)
-    
+
 
 
 """
@@ -223,17 +223,23 @@ num_epochs = 30    # number of epochs
 
 #def load_preprocess_mnist_data(train_in_out_size=2000):
     #(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train = distilled_images_from_first_100 #[:1000] # first 1000 images from .gz images file
-y_train = labels_from_first_100 # first 1000 labels from .gz file
+x_train = first_1000_train_images #[:1000] # first 1000 images from .gz images file
+y_train = first_1000_train_labels # first 1000 labels from .gz file
 
 x_test = t10k_images_idx3_ubyte # all 10,000 images from test.gz?
 y_test = t10k_labels_idx1_ubyte # all 10,000 labels from test.gz?
 
-x_attack_train = third_1000_train_images # some images from mnist training data
-y_attack_train = third_1000_train_labels
+# x_attack_train = third_1000_train_images # some images from mnist training data
+# y_attack_train = third_1000_train_labels
 
-x_out = fourth_1000_train_images
-y_out = fourth_1000_train_labels
+x_out = third_1000_train_images
+y_out = third_1000_train_labels
+# print(f"x_out shape: {x_out.shape}")
+# print(f"y_out shape: {y_out.shape}")
+
+
+x_validation = fourth_1000_train_images
+y_validation = fourth_1000_train_labels
 
 target_train_size = x_train.shape[0]
 
@@ -255,27 +261,31 @@ flat_vector_size = 28 * 28
 flat_vector_size_distilled = 28 * 28 * 3
 x_train = x_train.reshape(x_train.shape[0], flat_vector_size)
 x_test = x_test.reshape(x_test.shape[0], flat_vector_size)
-x_attack_train = x_attack_train.reshape(x_attack_train.shape[0], flat_vector_size)
+# x_attack_train = x_attack_train.reshape(x_attack_train.shape[0], flat_vector_size)
+x_validation = x_validation.reshape(x_validation.shape[0], flat_vector_size)
 x_out = x_out.reshape(x_out.shape[0], flat_vector_size)
+print("made it here")
 
 # Put the labels in "one-hot" encoding using keras' to_categorical()
 num_classes = 10
 y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
-y_attack_train = keras.utils.to_categorical(y_attack_train, num_classes)
+# y_attack_train = keras.utils.to_categorical(y_attack_train, num_classes)
 y_out = keras.utils.to_categorical(y_out, num_classes)
+y_validation = keras.utils.to_categorical(y_validation, num_classes)
+print("made it here too")
 
 # extract targets (some in, some out)
 #x_targets, y_targets, in_or_out_targets = get_targets(x_train, y_train, x_out, y_out)
 
 
 #train_loss, train_accuracy, test_loss, test_accuracy = train_model(model, x_train, y_train, x_test, y_test, num_epochs, verbose=True)
-train_loss, train_accuracy, test_loss, test_accuracy = train_model(model, x_train, y_train, x_test, y_test, num_epochs, x_attack_train, y_attack_train, verbose=True)
+train_loss, train_accuracy, test_loss, test_accuracy = train_model(model, x_train, y_train, x_test, y_test, num_epochs, x_validation, y_validation, verbose=True)
    
 print('Trained target model on {} records. Train accuracy and loss: {:.1f}%, {:.2f} -- Test accuracy and loss: {:.1f}%, {:.2f}'.format(target_train_size, 100.0*train_accuracy, train_loss, 100.0*test_accuracy, test_loss))
 
 
-save_model(model,"30e_025rc_300h")
+save_model(model,training_data_filename + "_" + str(test_accuracy))
 
 
 # fig = plt.figure()
