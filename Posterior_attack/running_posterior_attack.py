@@ -13,7 +13,7 @@ import os
 import keras
 import gzip
 import numpy as np
-import sklearn.metrics as metrics
+# import sklearn.metrics as metrics
 import matplotlib.pyplot as plt
 
 
