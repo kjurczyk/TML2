@@ -13,7 +13,7 @@ train_target_model_from_hw2_and_save_many_iterations: trains a target model with
 __init__.py: The python script for initilizing dataset and configure dataset settings
 fashion.py: Load the fashion customized dataset and convert arrays to tensors for distillation
 
-Micellaneous
+Miscellaneous
 job.sh: Sample job script that submitted to the HiperGator
 logs.zip: All the logs
 results-MNIST.zip: Reproduced their results on MNIST
