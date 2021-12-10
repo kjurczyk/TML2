@@ -14,4 +14,4 @@ __init__.py: The python script for initilizing dataset and configure dataset set
 fashion.py: Load the fashion customized dataset and convert arrays to tensors for distillation
 job.sh: Sample job script that submitted to the HiperGator
 logs.zip: All the logs
-results-MNIST.zip: Replicated their results on MNIST
+results-MNIST.zip: Reproduced their results on MNIST
