@@ -12,6 +12,9 @@ train_target_model_and_save_LeNet_try2.py: trains a target model and saves it
 train_target_model_from_hw2_and_save_many_iterations: trains a target model with the simple architecture from HW2 (it goes through a couple of iterations) and then saves it
 __init__.py: The python script for initilizing dataset and configure dataset settings
 fashion.py: Load the fashion customized dataset and convert arrays to tensors for distillation
+
+Micellaneous
 job.sh: Sample job script that submitted to the HiperGator
 logs.zip: All the logs
 results-MNIST.zip: Reproduced their results on MNIST
+arch*.zip: Typical distillation output for the chosen parameters
